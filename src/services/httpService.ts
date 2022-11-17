@@ -11,20 +11,24 @@ class HttpService{
     }
 
     public fetch(endPoint:string,METHOD:AxiosRequestConfig['method'], res: any, query?:any):Promise<any>{
-        return new Promise(()=>{
         const URL=this.host+":"+this.port+endPoint
-        axios({
+        return axios({
             data: query,
             headers: { "Content-Type": "application/json" },
             method:METHOD,
             url: URL,
-        }).then((response) => {
-            res.status(response.status).send(response.data)
+            timeout:3000,
+            timeoutErrorMessage:"check your connection"
+        }).then((response:any) => {
+             return response
         }).catch((err) => {
-            res.status(err.response.status).json({"error": err.response.data.errorMessage})
+            if(err.code=='ECONNREFUSED')
+            {
+                return {"status":503, "statusText":err.code, "data":{}}
+            }
+            return err.response
           })
-        })
-    }
+     }
 }
 
 

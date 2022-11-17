@@ -23,7 +23,7 @@ describe('druid API', ()=>{
             .get('/status/health')
             .end((err, res)=>{
                 res.should.have.status(200)
-                res.body.should.be.a('boolean')
+                res.body.should.be.a('object')
                 done()
             })
         })
@@ -32,7 +32,7 @@ describe('druid API', ()=>{
             .get('/druid/v2/datasources')
             .end((err,res)=>{
                 res.should.have.status(200)
-                res.body.should.be.a('array')
+                res.body.should.be.a('object')
                 done()
             })
         })
@@ -53,7 +53,7 @@ describe('druid API', ()=>{
             .send(JSON.parse(testDruidQuery.VALID_QUERY))
             .end((err, res)=>{
                 res.should.have.status(200)
-                res.body.should.be.a('array')
+                res.body.should.be.a('object')
                 done()
             })
         })
@@ -84,7 +84,7 @@ describe('druid API', ()=>{
             .send(JSON.parse(testDruidQuery.HIGH_THRESHOLD_QUERY))
             .end((err, res)=>{
                 res.should.have.status(200)
-                res.body.should.be.a('array')
+                res.body.should.be.a('object')
                 done()
             })
         })
@@ -94,7 +94,7 @@ describe('druid API', ()=>{
             .send(JSON.parse(testDruidQuery.HIGH_LIMIT_QUERY))
             .end((err, res)=>{
                 res.should.have.status(200)
-                res.body.should.be.a('array')
+                res.body.should.be.a('object')
                 done()
             })
         })
@@ -104,7 +104,7 @@ describe('druid API', ()=>{
             .send(JSON.parse(testDruidQuery.WITHOUT_THRESOLD_QUERY))
             .end((err, res)=>{
                 res.should.have.status(200)
-                res.body.should.be.a('array')
+                res.body.should.be.a('object')
                 done()
             })
         })
@@ -124,7 +124,7 @@ describe('druid API', ()=>{
             .send(JSON.parse(testDruidQuery.UNSUPPORTED_DATA_SOURCE))
             .end((err, res)=>{
                 res.should.have.status(200)
-                res.body.should.be.a('array')
+                res.body.should.be.a('object')
                 done()
             })
         })
@@ -134,7 +134,7 @@ describe('druid API', ()=>{
             .send(JSON.parse(testDruidQuery.VALID_SQL_QUERY))
             .end((err, res)=>{
                 res.should.have.status(200)
-                res.body.should.be.a('array')
+                res.body.should.be.a('object')
                 done()
             })
         })
@@ -144,7 +144,7 @@ describe('druid API', ()=>{
             .send(JSON.parse(testDruidQuery.HIGH_LIMIT_SQL_QUERY))
             .end((err, res)=>{
                 res.should.have.status(200)
-                res.body.should.be.a('array')
+                res.body.should.be.a('object')
                 done()
             })
         })
@@ -154,7 +154,7 @@ describe('druid API', ()=>{
             .send(JSON.parse(testDruidQuery.WITHOUT_LIMIT_SQL_QUERY))
             .end((err, res)=>{
                 res.should.have.status(200)
-                res.body.should.be.a('array')
+                res.body.should.be.a('object')
                 done()
             })
         })
