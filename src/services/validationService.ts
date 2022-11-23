@@ -38,10 +38,9 @@ class ValidationService{
         if (diffInDays>allowedRange)
         {
             return {
-                error:400,
+                errorCode:400,
                 errorMessage:`invalid date range! make sure your range must be valid and cannot be more than ${allowedRange} days`,
                 isValid:false
-
             }
         }
         else
@@ -51,7 +50,7 @@ class ValidationService{
     }
     else{
         return {
-            error:400,
+            errorCode:400,
             errorMessage:'invalid date range! the date range cannot be a null value',
             isValid:false
         }
@@ -92,7 +91,7 @@ class ValidationService{
                 if (diffInDays>allowedRange||diffInDays<0)
                 {
                     return {
-                        error:400,
+                        errorCode:400,
                         errorMessage:`invalid date range! make sure your range must be valid and cannot be more than ${allowedRange} days`,
                         isValid:false
 
@@ -106,7 +105,7 @@ class ValidationService{
             }
             else{
                 return {
-                    error:400, 
+                    errorCode:400, 
                     errorMessage:"invalid date range! the date range cannot be a null value", 
                     isValid:false
                 }

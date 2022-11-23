@@ -1,13 +1,13 @@
 import app from '../app'
 import chai from 'chai'
 import chaiHttp from 'chai-http'
-import testDruidQuery from './testquery'
+import testDruidQuery from './testquery.spec';
  
 chai.should()
 chai.use(chaiHttp)
 
 describe('druid API', ()=>{
-     
+      
     describe('GET /',()=>{
         it("it should return process information", (done)=>{
             chai.request(app)
@@ -47,6 +47,7 @@ describe('druid API', ()=>{
     })
 
     describe('POST /',()=>{
+        
         it("it should fetch information from druid data source", (done)=>{
             chai.request(app)
             .post('/druid/v2/')

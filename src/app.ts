@@ -1,21 +1,19 @@
-import express, { Application } from 'express'
-import {config} from './config/config'
-import {router} from './routes/router'
-import { responseFormatter } from './helpers/responseFormatter'
-const app:Application=express()
-
+import express, { Application, Request, Response } from 'express'
+import { config } from './config/config'
+import { router } from './routes/router'
+// import { ErrorHandler, PromiseError } from './helpers/errorHandler'
+const app: Application = express()
+import {globalErrorHandler} from './helpers/errorHandler'
+import { routeNotFound } from './helpers/noRouteFound';
 app.use(express.json())
 
 app.use('/', router)
 
-app.use((req, res) => {
-    const error = new Error('Not Found')
-    return res.status(404).json(
-       responseFormatter.formatApiResponse(undefined, undefined, error.message, undefined)
-    )
-})
+app.use('*', routeNotFound)
 
-app.listen(config.apiPort, ()=>{
+app.use(globalErrorHandler)
+
+app.listen(config.apiPort, () => {
     console.log(`listening on port ${config.apiPort}`)
 })
 

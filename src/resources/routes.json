@@ -1,32 +1,28 @@
 {
-    "GET":{
-        "GETSTATUS":{
-            "URL":"/status",
-            "METHOD":"GET",
-            "APIID":"druid.status"
-        },
-        "HEALTHCHECK":{
-            "URL":"/status/health",
-            "METHOD":"GET",
-            "APIID":"druid.health.check"
-        },
-        "LISTDATSOURCES":{
-            "URL":"/druid/v2/datasources",
-            "METHOD":"GET",
-            "APIID":"druid.datasources.list"
-        }
+    "GETSTATUS":{
+        "URL":"/statuss",
+        "METHOD":"GET",
+        "APIID":"druid.status"
     },
-    "POST":{
-        "NATIVEQUERY":{
-            "URL":"/druid/v2/",
-            "METHOD":"POST",
-            "APIID":"druid.execute.native.query"
-        },
-        "SQLQUERY":{
-            "URL":"/druid/v2/sql/",
-            "METHOD":"POST",
-            "APIID":"druid.execute.sql.query"
-        }
-    }
+    "HEALTHCHECK":{
+        "URL":"/status/health",
+        "METHOD":"GET",
+        "APIID":"druid.health.check"
+    },
+    "LISTDATSOURCES":{
+        "URL":"/druid/v2/datasources",
+        "METHOD":"GET",
+        "APIID":"druid.datasources.list"
+    },
+    "NATIVEQUERY":{
+        "URL":"/druid/v2",
+        "METHOD":"POST",
+        "APIID":"druid.execute.native.query"
+    },
+    "SQLQUERY":{
+        "URL":"/druid/v2/sql/",
+        "METHOD":"POST",
+        "APIID":"druid.execute.sql.query"
+    } 
 
 }

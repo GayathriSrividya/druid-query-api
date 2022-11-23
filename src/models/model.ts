@@ -1,5 +1,5 @@
 export interface IValidationResponse {
-    "error"?: any
+    "errorCode"?: any
     "errorMessage"?: string
     "isValid": boolean
 }

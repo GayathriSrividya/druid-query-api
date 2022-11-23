@@ -1,16 +1,22 @@
+
 class responseFormatter{
 
-public static formatApiResponse(id="druid.api", params = {}, responseCode:string | undefined, result={}) {
-    return {
-        "id":id,
-        "ver":"v1",
-        "timestamp": Date.now(),
-        "params":params,
-        "responseCode":responseCode,
-        "result":result
+public static getDefaultParams({status="success", errmsg=null}){
+    return{
+        status,
+        errmsg
     }
 }
 
-}
+public static formatApiResponse({id="druid.api" , ver="v1", params=this.getDefaultParams({}), responseCode=200, result={}}) {
+    return {
+        id, 
+        ver,
+        "ts": Date.now(),
+        params,
+        responseCode,
+        result
+    }
+}}
 
 export {responseFormatter}

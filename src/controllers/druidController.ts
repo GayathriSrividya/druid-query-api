@@ -1,83 +1,114 @@
 import { config } from '../config/config'
-import { HttpService } from "../services/httpService"
-import { DruidService } from '../services/druidService'
-import routes= require("../resources/routes.json")
 import { responseFormatter } from '../helpers/responseFormatter'
-const httpService = new HttpService(config.druidHost, Number(config.druidPort))
+import { DruidService } from '../services/druidService'
+import { druidInstance } from '../helpers/axios'
+import { Request, Response, NextFunction } from 'express'
+import { StatusCodes } from 'http-status-codes'
+import routes= require("../resources/routes.json")
+const errorHandler = require("../helpers/errorHandler")
+const createError = require('http-errors')
 const druidService = new DruidService({limits:config.limits})
 
 
 class druidController
 {
-public static getStatus =  async (req:any, res: any) => {
-    try 
-    {
-       let result = await httpService.fetch(req.url, "GET", res) 
-       res.status(result.status).json(responseFormatter.formatApiResponse(routes.GET.GETSTATUS.APIID, undefined, result.statusText, result.data))
-    } 
-    catch (error) 
-    {
-        return error
-    }
-}
-public static getHealthStatus= async (req:any, res:any) => {
-    try 
-    {
-        let result = await httpService.fetch(req.url, "GET", res)
-        res.status(result.status).json(responseFormatter.formatApiResponse(routes.GET.HEALTHCHECK.APIID, undefined, result.statusText, result.data))
-    } 
-    catch (error) 
-    {
-        return error
-    }
-}
-public static listDataSources= async (req:any, res:any) => {
-    try 
-    {
-        let result = await httpService.fetch(req.url, "GET", res)
-        
-        res.status(result.status).json(responseFormatter.formatApiResponse(routes.GET.LISTDATSOURCES.APIID, undefined, result.statusText, result.data))
-    } 
-    catch (error) 
-    {
-        return error
-    }
-}
-public static executeNativeQuery=async (req:any, res:any)=>{
-    try
-    {
-        let validateQuery=druidService.validate(req, res)
-        if(validateQuery.isValid){
-            let result = await httpService.fetch(req.url, "POST", res, req.body)
-            res.status(result.status).json(responseFormatter.formatApiResponse(routes.GET.LISTDATSOURCES.APIID, undefined, result.statusText, result.data))
-        }
-        else{
-            return res.status(400).json(responseFormatter.formatApiResponse(undefined, undefined, validateQuery.errorMessage, undefined))
-        }
-    }
-    catch(error)
-    {
-        return error
-    }
-}
-public static executeSqlQuery=async (req:any, res:any)=>{
-    try
-    {
-        let validateQuery=druidService.validate(req, res, "/druid/v2/sql/")
-        if(validateQuery.isValid){
-            let result = await httpService.fetch(req.url, routes.POST.SQLQUERY.METHOD, res, req.body)
-            res.status(result.status).json(responseFormatter.formatApiResponse(routes.POST.SQLQUERY.APIID, undefined, result.statusText, result.data))
-        }
-        else
+ 
+    public static getStatus =  async (req:Request, res: Response, next:NextFunction) => {
+        try 
         {
-            return res.status(400).json(responseFormatter.formatApiResponse(undefined, undefined, validateQuery.errorMessage, undefined))
+            await druidInstance.get(routes.GETSTATUS.URL)
+            .then((response)=>{
+                res.status(response.status).json(responseFormatter.formatApiResponse({"id":routes.GETSTATUS.APIID,  "responseCode":response.status, "result":response.data}))
+            })
+        }
+        catch (error:any) 
+        {
+            next(createError(500, error.message))
         }
     }
-    catch(error)
-    {
-        return error
+    public static getHealthStatus= async (req:Request, res: Response) => {
+       
+            await druidInstance.get(routes.HEALTHCHECK.URL)
+            .then((response)=>{
+                res.status(response.status).json(responseFormatter.formatApiResponse({"id":routes.HEALTHCHECK.APIID,  "responseCode":response.status, "result":response.data}))
+            })
+            .catch((err)=>{
+                res.status(StatusCodes.NOT_FOUND).json("The API Endooin")
+            })
+             
+        
+        // catch (error) 
+        // {
+        //     ErrorHandler.errorHandler(req, res, error, routes.HEALTHCHECK.APIID)
+        // }
     }
-}
-}
+    public static listDataSources= async (req:Request, res: Response) => {
+        try 
+        {
+            await druidInstance.get(routes.LISTDATSOURCES.URL)
+            .then((response)=>{
+                res.status(response.status).json(responseFormatter.formatApiResponse({"id":routes.LISTDATSOURCES.APIID,  "responseCode":response.status, "result":response.data}))
+
+            })
+            .catch((err)=>{
+                // throw new PromiseError(err.response.statusText, err.response.status)
+            })
+             
+        }
+        catch (error) 
+        {
+            // ErrorHandler.errorHandler(req, res, error, routes.LISTDATSOURCES.APIID)
+        }
+    }
+    public static executeNativeQuery=async (req:Request, res: Response)=>{
+        try
+        {
+            let validateQuery=druidService.validate(req, res)
+            if(validateQuery.isValid){
+                await druidInstance.post(req.url, req.body)
+                .then((response)=>{
+                    res.status(response.status).json(responseFormatter.formatApiResponse({"id":routes.NATIVEQUERY.APIID,  "responseCode":response.status, "result":response.data}))
+                })
+                .catch((err)=>{
+                    // throw new PromiseError(err.response.statusText, err.response.status)
+                })
+            }
+            else
+            {
+                    // throw new ValidationError(validateQuery.errorMessage, validateQuery.errorCode)
+            }
+        }
+            catch (error) 
+            {
+                
+                // ErrorHandler.errorHandler(req, res, error, routes.NATIVEQUERY.APIID)
+                 
+            }
+    }
+    public static executeSqlQuery=async (req:Request, res: Response)=>{
+        try
+        {
+            let validateQuery=druidService.validate(req, res, "/druid/v2/sql/")
+             if(validateQuery.isValid){
+                await druidInstance.post(req.url, req.body)
+                .then((response)=>{
+                    res.status(response.status).json(responseFormatter.formatApiResponse({"id":routes.SQLQUERY.APIID,  "responseCode":response.status, "result":response.data}))
+                })
+                .catch((err)=>{
+                    // throw new PromiseError(err.response.statusText, err.response.status)
+                })
+            }
+            else
+            {
+                    // throw new ValidationError(validateQuery.errorMessage, validateQuery.errorCode)
+            }
+           
+        }
+            catch (error) 
+            {
+                // ErrorHandler.errorHandler(req, res, error, routes.SQLQUERY.APIID)
+            }
+    }
+    }
 
 export default druidController

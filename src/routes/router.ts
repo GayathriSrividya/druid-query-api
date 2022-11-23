@@ -2,16 +2,18 @@ import express from 'express'
 
 import druidController from '../controllers/druidController'
 
+const routes = require('../resources/routes.json')
+
 const router = express.Router()
- 
-router.get('/status', druidController.getStatus)
 
-router.get('/status/health', druidController.getHealthStatus)
+router.get(routes.GETSTATUS.URL,  druidController.getStatus)
 
-router.get('/druid/v2/datasources', druidController.listDataSources)
+router.get(routes.HEALTHCHECK.URL, druidController.getHealthStatus)
 
-router.post('/druid/v2/', druidController.executeNativeQuery)
+router.get(routes.LISTDATSOURCES.URL, druidController.listDataSources)
 
-router.post('/druid/v2/sql/', druidController.executeSqlQuery)
+router.post(routes.NATIVEQUERY.URL, druidController.executeNativeQuery)
+
+router.post(routes.SQLQUERY.URL, druidController.executeSqlQuery)
 
 export {router}
